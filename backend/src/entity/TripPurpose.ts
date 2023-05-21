@@ -1,0 +1,4 @@
+enum TripPurpose {
+    PRIVATE,
+    BUSINESS
+}

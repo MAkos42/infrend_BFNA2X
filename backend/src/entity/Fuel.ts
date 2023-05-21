@@ -1,0 +1,4 @@
+enum Fuel {
+    Diesel,
+    Gasoline
+}
