@@ -1,4 +1,4 @@
-enum TripPurpose {
+export enum TripPurpose {
     PRIVATE,
     BUSINESS
 }

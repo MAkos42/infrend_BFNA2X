@@ -15,9 +15,17 @@ export class Driver {
     @Column()
     address: string
 
-    @Column({ unique: true })
-    driverId: number
+    @Column("char", { unique: true, length: 8 })
+    driversLicense: string
 
     @Column("date")
     idExpirationDate: Date
+
+    constructor(nev: string, dateOfBirth: Date, address: string, driversLicense: string, idExpirationDate: Date) {
+        this.nev = nev;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
+        this.driversLicense = driversLicense;
+        this.idExpirationDate = idExpirationDate;
+    }
 }

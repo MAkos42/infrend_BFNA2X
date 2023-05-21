@@ -1,4 +1,4 @@
-enum Fuel {
-    Diesel,
-    Gasoline
+export enum Fuel {
+    DIESEL,
+    GASOLINE
 }

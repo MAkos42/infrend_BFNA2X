@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Vehicle } from './Vehicle';
 import { Driver } from "./Driver";
+import { TripPurpose } from "./TripPurpose";
 
 Entity()
 export class Trip {
@@ -8,10 +9,10 @@ export class Trip {
     @PrimaryGeneratedColumn({ name: "tripid" })
     id: number
 
-    @ManyToOne(() => Driver, (driver) => driver.id)
+    @ManyToOne(() => Driver)
     driver: Driver
 
-    @ManyToOne(() => Vehicle, (vehicle) => vehicle.id)
+    @ManyToOne(() => Vehicle)
     vehicle: Vehicle
 
     @Column("date")
@@ -31,5 +32,16 @@ export class Trip {
 
     @Column()
     newOdometer: number
+
+    constructor(driver: Driver, vehicle: Vehicle, date: Date, purpose: TripPurpose, startLocation: string, endLocation: string, distance: number) {
+        this.driver = driver
+        this.vehicle = vehicle
+        this.date = date
+        this.purpose = purpose
+        this.startLocation = startLocation
+        this.endLocation = endLocation
+        this.distance = distance
+        this.newOdometer = vehicle.odometer
+    }
 
 }
