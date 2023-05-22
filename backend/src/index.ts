@@ -1,4 +1,5 @@
 import express = require("express");
+import cors = require("cors");
 import { AppDataSource } from "./data-source"
 import { Driver } from "./entity/Driver";
 import { Fuel } from "./entity/Fuel";
@@ -12,6 +13,13 @@ import { Vehicle } from "./entity/Vehicle";
 const app = express();
 
 app.use(express.json());
+
+let corsOptions = {
+    origin: 'http://example.com',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204 
+}
+
+app.use(cors(corsOptions));
 
 app.get('/', (req, res) => {
     res.json({ message: 'How did you reach my backend?' });
