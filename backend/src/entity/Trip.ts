@@ -1,24 +1,26 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Vehicle } from './Vehicle';
 import { Driver } from "./Driver";
 import { TripPurpose } from "./TripPurpose";
 
-Entity()
+@Entity("trips")
 export class Trip {
 
     @PrimaryGeneratedColumn({ name: "tripid" })
     id: number
 
     @ManyToOne(() => Driver)
+    @JoinColumn()
     driver: Driver
 
     @ManyToOne(() => Vehicle)
+    @JoinColumn()
     vehicle: Vehicle
 
     @Column("date")
     date: Date
 
-    @Column()
+    @Column("enum", { enum: TripPurpose })
     purpose: TripPurpose
 
     @Column()
@@ -41,7 +43,7 @@ export class Trip {
         this.startLocation = startLocation
         this.endLocation = endLocation
         this.distance = distance
-        this.newOdometer = vehicle.odometer
+        this.newOdometer = 0
     }
 
 }

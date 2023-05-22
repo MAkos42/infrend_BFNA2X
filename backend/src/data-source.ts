@@ -1,5 +1,9 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
+import { Vehicle } from "./entity/Vehicle"
+import { Driver } from "./entity/Driver"
+import { Trip } from "./entity/Trip"
+import { Login } from "./entity/Login"
 
 export const AppDataSource = new DataSource({
     type: "mysql",
@@ -9,8 +13,8 @@ export const AppDataSource = new DataSource({
     password: "admin",
     database: "triplog",
     synchronize: true,
-    logging: false,
-    entities: ['./**/entity/*.js'],
+    logging: true,
+    entities: [Vehicle, Driver, Login, Trip],
     migrations: [],
     subscribers: [],
 })

@@ -1,4 +1,4 @@
 export enum TripPurpose {
-    PRIVATE,
-    BUSINESS
+    PRIVATE = "PRIVATE",
+    BUSINESS = "BUSINESS"
 }

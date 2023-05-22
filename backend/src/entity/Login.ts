@@ -1,22 +1,22 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 import { PrivilegeLevel } from './PrivilegeLevel';
 
-Entity()
-export class User {
+@Entity("users")
+export class Login {
     @PrimaryGeneratedColumn({ name: "userid" })
     id: number
 
     @Column()
-    username: string
+    uname: string
 
     @Column()
     passwd: string
 
-    @Column()
+    @Column("enum", { enum: PrivilegeLevel })
     privilegeLevel: PrivilegeLevel
 
     constructor(username: string, password: string, privilegeLevel: PrivilegeLevel) {
-        this.username = username;
+        this.uname = username;
         this.passwd = password;
         this.privilegeLevel = privilegeLevel;
     }

@@ -1,4 +1,4 @@
 export enum PrivilegeLevel {
-    USER,
-    ADMIN
+    USER = "USER",
+    ADMIN = "ADMIN"
 }

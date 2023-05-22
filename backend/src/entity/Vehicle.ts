@@ -1,18 +1,19 @@
-import { Entity, PrimaryColumn, Column, PrimaryGeneratedColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
 import { Fuel } from "./Fuel"
 
-@Entity()
+@Entity("vehicles")
 export class Vehicle {
+
     @PrimaryGeneratedColumn({ name: "vehicleid" })
     id: number
 
-    @Column("char", { length: 8, unique: true })
+    @Column("char", { length: 8, nullable: false, unique: true })
     regPlate: string
 
     @Column()
     type: string
 
-    @Column()
+    @Column("enum", { enum: Fuel })
     fuel: Fuel
 
     @Column("double")
@@ -28,6 +29,10 @@ export class Vehicle {
         this.fuel = fuel
         this.fuelEcon = fuelEcon
         this.odometer = odometer
+    }
+
+    getOdometer() {
+        return this.odometer;
     }
 
 }

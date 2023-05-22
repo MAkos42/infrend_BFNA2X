@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
+@Entity("drivers")
 export class Driver {
 
     @PrimaryGeneratedColumn({ name: "driverid" })
@@ -15,7 +15,7 @@ export class Driver {
     @Column()
     address: string
 
-    @Column("char", { unique: true, length: 8 })
+    @Column("char", { unique: true, nullable: false, length: 8 })
     driversLicense: string
 
     @Column("date")

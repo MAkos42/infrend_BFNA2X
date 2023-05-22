@@ -1,4 +1,4 @@
 export enum Fuel {
-    DIESEL,
-    GASOLINE
+    DIESEL = "DIESEL",
+    GASOLINE = "GASOLINE"
 }
