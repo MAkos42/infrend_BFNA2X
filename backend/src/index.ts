@@ -1,4 +1,4 @@
-// import express = require("express");
+import express = require("express");
 import { AppDataSource } from "./data-source"
 import { Driver } from "./entity/Driver";
 import { Fuel } from "./entity/Fuel";
@@ -9,7 +9,7 @@ import { Login } from "./entity/Login";
 import { Vehicle } from "./entity/Vehicle";
 
 
-/* const app = express();
+const app = express();
 
 app.use(express.json());
 
@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 
 app.listen(3000, () => {
     console.log('Server is listening at port 3000 ...');
-}); */
+});
 
 AppDataSource.initialize().then(async () => {
 
