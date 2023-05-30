@@ -1,1 +1,26 @@
-<p>vehicles works!</p>
+<mat-table [dataSource]="vehicleSource" class="mat-elevation-z8">
+    <!-- Replace 'column' with your table column names -->
+    <ng-container matColumnDef="regPlate">
+        <mat-header-cell *matHeaderCellDef>Registration Number</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{ element.regPlate }}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="type">
+        <mat-header-cell *matHeaderCellDef>Vehicle Type</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{ element.type }}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="fuel">
+        <mat-header-cell *matHeaderCellDef>Fuel Type</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{ element.fuel }}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="fuelEcon">
+        <mat-header-cell *matHeaderCellDef>Fuel economy</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{ element.fuelEcon }}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="odometer">
+        <mat-header-cell *matHeaderCellDef>Odometer</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{ element.odometer }}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>

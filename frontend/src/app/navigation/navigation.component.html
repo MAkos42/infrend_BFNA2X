@@ -3,9 +3,9 @@
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
     <mat-toolbar color="primary">Menu</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink="vehicles">Járművek</a>
-      <a mat-list-item routerLink="drivers">Sofőrök</a>
-      <a mat-list-item routerLink="trips">Utazások</a>
+      <a mat-list-item routerLink="vehicles" routerLinkActive #rla="routerLinkActive">Járművek</a>
+      <a mat-list-item routerLink="drivers" routerLinkActive #rla="routerLinkActive">Sofőrök</a>
+      <a mat-list-item routerLink="trips" routerLinkActive #rla="routerLinkActive">Utazások</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
