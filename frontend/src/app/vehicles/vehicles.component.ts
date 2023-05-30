@@ -5,6 +5,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { VehicleDTO } from '../DTO/VehicleDTO';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Fuel } from '../DTO/Fuel';
+import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-vehicles',
@@ -12,9 +14,13 @@ import { Fuel } from '../DTO/Fuel';
   styleUrls: ['./vehicles.component.css']
 })
 export class VehiclesComponent implements OnInit {
+  private routerEventSubscription: Subscription;
+  plateUsedError: boolean = false;
+  editMode: boolean = false;
+  selectedVehicle: VehicleDTO;
 
   vehicleSource: MatTableDataSource<VehicleDTO>;
-  displayedColumns: string[] = ['regPlate', 'type', 'fuel', 'fuelEcon', 'odometer'];
+  displayedColumns: string[] = ['regPlate', 'type', 'fuel', 'fuelEcon', 'odometer', 'extra'];
 
   vehicleForm = new FormGroup({
     regPlate: new FormControl(null, [Validators.required, Validators.pattern('^[A-z]{3,4}-[\\d]{3}$')]),
@@ -24,10 +30,49 @@ export class VehiclesComponent implements OnInit {
     odometer: new FormControl<number>(null, [Validators.required, Validators.min(0)])
   });
 
-  constructor(private vehiclesProxyService: VehiclesProxyService, private snackBar: MatSnackBar) { }
+  constructor(private vehiclesProxyService: VehiclesProxyService, private router: Router, private route: ActivatedRoute, private snackBar: MatSnackBar) {
+    this.routerEventSubscription = this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        // Call your function here
+        this.ngOnInit();
+      }
+    })
+  }
 
   ngOnInit() {
     this.loadData();
+
+    let id: number;
+    this.route.params.subscribe(
+      (params: Params) => {
+        id = params['id'];
+      }
+    )
+
+    if (id == null) { //return if no id
+      return;
+    }
+    let syncMagic = new Promise<void>((resolve, reject) => {
+      this.vehiclesProxyService.getVehicle(id).subscribe(vehicle => {
+        this.selectedVehicle = vehicle;
+        console.log(this.selectedVehicle);
+        resolve();
+      })
+    })
+    syncMagic.then(() => {
+      if (this.selectedVehicle == null)
+        return;
+
+      this.vehicleForm.setValue({
+        regPlate: this.selectedVehicle.regPlate,
+        type: this.selectedVehicle.type,
+        fuel: this.selectedVehicle.fuel,
+        fuelEcon: this.selectedVehicle.fuelEcon,
+        odometer: this.selectedVehicle.odometer
+      })
+      this.vehicleForm.controls['regPlate'].disable();
+      this.editMode = true;
+    })
   }
 
   loadData() {
@@ -37,17 +82,51 @@ export class VehiclesComponent implements OnInit {
     });
   }
 
+  onRowClicked(row) {
+    console.log(row);
+    this.router.navigate(['/vehicles/', row.id]);
+  }
+
+  clearSelected() {
+    this.router.navigate(['/vehicles/']);
+  }
+
   onSubmit() {
-    if (this.vehicleForm.valid) {
-      let formVehicle = this.vehicleForm.value;
-      let newVehicle: VehicleDTO = new VehicleDTO(formVehicle.regPlate.toUpperCase(), formVehicle.type, formVehicle.fuel, formVehicle.fuelEcon, formVehicle.odometer);
-      console.log(newVehicle);
-      this.vehiclesProxyService.saveVehicle(newVehicle).subscribe(data => { console.log(data) });
+    this.plateUsedError = false;
+    if (!this.vehicleForm.valid) {
+      this.snackBar.open('Kérlek tölts ki minden mezőt megfelelően', 'Bezár', { duration: 2000 });
+    }
+
+    let formVehicle = this.vehicleForm.value;
+    let syncMagic = new Promise<void>((resolve, reject) => {               //syncronisation black magic
+      this.vehiclesProxyService.getVehicleByRegPlate(formVehicle.regPlate).subscribe(vehicle => {
+        console.log(vehicle);
+        if (vehicle != null) {
+          this.snackBar.open('A megadott rendszámú jármű már létezik a rendszerben', 'Bezár', { duration: 2000 });
+          this.plateUsedError = true;
+          resolve();
+        }
+      })
+    })
+    syncMagic.then(() => {
+      console.log(this.plateUsedError);
+      if (this.plateUsedError)
+        return;
+
+      this.selectedVehicle.regPlate = formVehicle.regPlate.toUpperCase();
+      this.selectedVehicle.type = formVehicle.type;
+      this.selectedVehicle.fuel = formVehicle.fuel;
+      this.selectedVehicle.fuelEcon = formVehicle.fuelEcon;
+      this.selectedVehicle.odometer = formVehicle.odometer;
+
+      console.log(this.selectedVehicle);
+      this.vehiclesProxyService.saveVehicle(this.selectedVehicle).subscribe(data => { console.log(data) });
       this.snackBar.open('Jármű sikeresen elmentve', 'Bezár', { duration: 2000 });
       this.vehicleForm.reset();
       this.loadData();
-    } else {
-      this.snackBar.open('Kérlek tölts ki minden mezőt megfelelően', 'Bezár', { duration: 2000 });
-    }
+    })
   }
+
+
+
 }

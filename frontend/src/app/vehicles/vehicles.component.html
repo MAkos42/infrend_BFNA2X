@@ -23,15 +23,28 @@
         <mat-header-cell *matHeaderCellDef>Kilométeróra</mat-header-cell>
         <mat-cell *matCellDef="let element">{{ element.odometer }}</mat-cell>
     </ng-container>
+    <ng-container matColumnDef="extra">
+        <mat-header-cell *matHeaderCellDef class="extraColumn"><button class="right-align" mat-raised-button
+                color="accent" (click)="clearSelected()">Új
+                <mat-icon>add</mat-icon></button></mat-header-cell>
+        <mat-cell *matCellDef="let element" class="extraColumn"></mat-cell>
+    </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns" (click)="onRowClicked(row)"></mat-row>
 </mat-table>
 <br>
 <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
-    <h2>Autó hozzáadása/szerkesztése
-        <button mat-raised-button color="primary" type="submit">Mentés</button>
-    </h2>
+    <mat-toolbar color="accent">
+        <span *ngIf="editMode">
+            Autó szerkesztése
+            <button mat-raised-button color="primary" type="submit">Mentés</button>
+        </span>
+        <span *ngIf="!editMode">
+            Autó hozzáadása
+            <button mat-raised-button color="primary" type="submit">Mentés</button>
+        </span>
+    </mat-toolbar>
     <mat-form-field>
         <mat-label>Rendszám</mat-label>
         <input matInput placeholder="AAA(A)-000" formControlName="regPlate">
@@ -41,6 +54,9 @@
         </mat-error>
         <mat-error *ngIf="vehicleForm.controls['regPlate'].hasError('pattern')">
             A rendszám formátuma az AAA(A)-000 mintának kell megfelelőnek lennie
+        </mat-error>
+        <mat-error *ngIf="plateUsedError">
+            A rendszám már fel van véve a rendszerbe
         </mat-error>
     </mat-form-field>
     <mat-form-field>

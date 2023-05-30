@@ -11,3 +11,13 @@ input::-webkit-inner-spin-button {
 button {
   margin-left: 8px;
 }
+
+.mat-mdc-table .mat-mdc-row:hover {
+  cursor: pointer;
+  background-color: #ffd74022;
+}
+
+.extraColumn {
+  width: 100px;
+  text-align: right;
+}

@@ -34,11 +34,25 @@ app.get('/api/vehicles', async (req, res) => {
     }
 });
 
-app.get('/api/getvehicle', async (req, res) => {
+app.post('/api/getvehicle', async (req, res) => {
     try {
+        const { id } = req.body;
         const vService = new VehiclesService();
-        const vehicle = await vService.getVehicleByRegPlate();
-        console.log('Returned vehicle:' + vehicle);
+        const vehicle = await vService.getVehicle(id);
+        console.log(vehicle);
+        res.json(vehicle);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+app.post('/api/getvehiclebyreg', async (req, res) => {
+    try {
+        const { regPlate } = req.body;
+        const vService = new VehiclesService();
+        const vehicle = await vService.getVehicleByRegPlate(regPlate);
+        console.log(vehicle);
         res.json(vehicle);
     } catch (error) {
         console.error(error);
@@ -49,8 +63,9 @@ app.get('/api/getvehicle', async (req, res) => {
 app.post('/api/savevehicle', async (req, res) => {
     try {
         const vService = new VehiclesService();
-        const { regPlate, type, fuel, fuelEcon, odometer } = req.body;
+        const { id, regPlate, type, fuel, fuelEcon, odometer } = req.body;
         const newVehicle: Vehicle = new Vehicle(regPlate, type, fuel, fuelEcon, odometer)
+        newVehicle.id = null;
         console.log(newVehicle);
         await vService.saveVehicle(newVehicle);
 
