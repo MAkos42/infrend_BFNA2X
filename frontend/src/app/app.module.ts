@@ -17,6 +17,9 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { DriversComponent } from './drivers/drivers.component';
 import { TripsComponent } from './trips/trips.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatInputModule } from '@angular/material/input'
+import { MatSelectModule } from '@angular/material/select'
 
 @NgModule({
   declarations: [
@@ -38,7 +41,10 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatListModule,
     MatTableModule,
     MatFormFieldModule,
-    ReactiveFormsModule
+    MatInputModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

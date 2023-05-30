@@ -24,10 +24,37 @@ app.use(cors(corsOptions));
 
 app.get('/api/vehicles', async (req, res) => {
     try {
-        let vService = new VehiclesService();
+        const vService = new VehiclesService();
         const tableData = await vService.getVehicles();
         console.log('Returned entries:' + tableData.length);
         res.json(tableData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+app.get('/api/getvehicle', async (req, res) => {
+    try {
+        const vService = new VehiclesService();
+        const vehicle = await vService.getVehicleByRegPlate();
+        console.log('Returned vehicle:' + vehicle);
+        res.json(vehicle);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+app.post('/api/savevehicle', async (req, res) => {
+    try {
+        const vService = new VehiclesService();
+        const { regPlate, type, fuel, fuelEcon, odometer } = req.body;
+        const newVehicle: Vehicle = new Vehicle(regPlate, type, fuel, fuelEcon, odometer)
+        console.log(newVehicle);
+        await vService.saveVehicle(newVehicle);
+
+        res.json(newVehicle);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });

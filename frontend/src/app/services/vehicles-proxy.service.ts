@@ -15,4 +15,10 @@ export class VehiclesProxyService {
     const url = `${this.apiUrl}/vehicles`; // Replace 'table' with your endpoint URL
     return this.http.get<VehicleDTO[]>(url);
   }
+
+  saveVehicle(vehicle: VehicleDTO): Observable<VehicleDTO> {
+    const url = `${this.apiUrl}/savevehicle`;
+    console.log('service posted');
+    return this.http.post<VehicleDTO>(url, vehicle);
+  }
 }
