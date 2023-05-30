@@ -102,17 +102,21 @@ export class VehiclesComponent implements OnInit {
       this.vehiclesProxyService.getVehicleByRegPlate(formVehicle.regPlate).subscribe(vehicle => {
         console.log(vehicle);
         if (vehicle != null) {
-          this.snackBar.open('A megadott rendszámú jármű már létezik a rendszerben', 'Bezár', { duration: 2000 });
           this.plateUsedError = true;
-          resolve();
         }
+        resolve();
       })
     })
     syncMagic.then(() => {
       console.log(this.plateUsedError);
-      if (this.plateUsedError)
+      if (!this.editMode && this.plateUsedError) {
+        this.vehicleForm.controls['regPlate'].setErrors({ PlateInUse: true })
+        this.snackBar.open('A megadott rendszámú jármű már létezik a rendszerben', 'Bezár', { duration: 2000 });
         return;
+      }
 
+      if (this.selectedVehicle == null)
+        this.selectedVehicle = new VehicleDTO('', '', Fuel.DIESEL, 0, 0);
       this.selectedVehicle.regPlate = formVehicle.regPlate.toUpperCase();
       this.selectedVehicle.type = formVehicle.type;
       this.selectedVehicle.fuel = formVehicle.fuel;
@@ -120,10 +124,17 @@ export class VehiclesComponent implements OnInit {
       this.selectedVehicle.odometer = formVehicle.odometer;
 
       console.log(this.selectedVehicle);
-      this.vehiclesProxyService.saveVehicle(this.selectedVehicle).subscribe(data => { console.log(data) });
-      this.snackBar.open('Jármű sikeresen elmentve', 'Bezár', { duration: 2000 });
-      this.vehicleForm.reset();
-      this.loadData();
+      let nestedSyncMagic = new Promise<void>((resolve, reject) => {
+        this.vehiclesProxyService.saveVehicle(this.selectedVehicle).subscribe(data => { console.log(data) });
+      })
+
+      nestedSyncMagic.then(() => {
+
+        this.snackBar.open('Jármű sikeresen elmentve', 'Bezár', { duration: 2000 });
+        if (!this.editMode)
+          this.vehicleForm.reset();
+        this.loadData();
+      })
     })
   }
 

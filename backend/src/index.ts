@@ -65,7 +65,7 @@ app.post('/api/savevehicle', async (req, res) => {
         const vService = new VehiclesService();
         const { id, regPlate, type, fuel, fuelEcon, odometer } = req.body;
         const newVehicle: Vehicle = new Vehicle(regPlate, type, fuel, fuelEcon, odometer)
-        newVehicle.id = null;
+        newVehicle.id = id;
         console.log(newVehicle);
         await vService.saveVehicle(newVehicle);
 

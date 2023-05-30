@@ -55,8 +55,8 @@
         <mat-error *ngIf="vehicleForm.controls['regPlate'].hasError('pattern')">
             A rendszám formátuma az AAA(A)-000 mintának kell megfelelőnek lennie
         </mat-error>
-        <mat-error *ngIf="plateUsedError">
-            A rendszám már fel van véve a rendszerbe
+        <mat-error *ngIf="vehicleForm.controls['regPlate'].hasError('plateInUse')">
+            A megadott rendszám már fel van véve a rendszerbe
         </mat-error>
     </mat-form-field>
     <mat-form-field>
