@@ -2,18 +2,18 @@ export class DriverDTO {
 
     id: number
 
-    nev: string
+    name: string
 
-    dateOfBirth: Date
+    dateOfBirth: string
 
     address: string
 
     driversLicense: string
 
-    idExpirationDate: Date
+    idExpirationDate: string
 
-    constructor(nev: string, dateOfBirth: Date, address: string, driversLicense: string, idExpirationDate: Date) {
-        this.nev = nev;
+    constructor(name: string, dateOfBirth: string, address: string, driversLicense: string, idExpirationDate: string) {
+        this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
         this.driversLicense = driversLicense;

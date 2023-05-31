@@ -52,7 +52,7 @@ export class VehiclesComponent implements OnInit {
     if (id == null) { //return if no id
       return;
     }
-    let syncMagic = new Promise<void>((resolve, reject) => {
+    let syncMagic = new Promise<void>((resolve) => {
       this.vehiclesProxyService.getVehicle(id).subscribe(vehicle => {
         this.selectedVehicle = vehicle;
         console.log(this.selectedVehicle);
@@ -70,7 +70,6 @@ export class VehiclesComponent implements OnInit {
         fuelEcon: this.selectedVehicle.fuelEcon,
         odometer: this.selectedVehicle.odometer
       })
-      this.vehicleForm.controls['regPlate'].disable();
       this.editMode = true;
     })
   }
@@ -98,7 +97,7 @@ export class VehiclesComponent implements OnInit {
     }
 
     let formVehicle = this.vehicleForm.value;
-    let syncMagic = new Promise<void>((resolve, reject) => {               //syncronisation black magic
+    let syncMagic = new Promise<void>((resolve) => {               //syncronisation black magic
       this.vehiclesProxyService.getVehicleByRegPlate(formVehicle.regPlate).subscribe(vehicle => {
         console.log(vehicle);
         if (vehicle != null) {
@@ -110,13 +109,14 @@ export class VehiclesComponent implements OnInit {
     syncMagic.then(() => {
       console.log(this.plateUsedError);
       if (!this.editMode && this.plateUsedError) {
-        this.vehicleForm.controls['regPlate'].setErrors({ PlateInUse: true })
+        this.vehicleForm.controls['regPlate'].setErrors({ PlateInUse: true });
+        this.vehicleForm.updateValueAndValidity();
         this.snackBar.open('A megadott rendszámú jármű már létezik a rendszerben', 'Bezár', { duration: 2000 });
         return;
       }
 
       if (this.selectedVehicle == null)
-        this.selectedVehicle = new VehicleDTO('', '', Fuel.DIESEL, 0, 0);
+        this.selectedVehicle = new VehicleDTO(null, null, null, null, null);
       this.selectedVehicle.regPlate = formVehicle.regPlate.toUpperCase();
       this.selectedVehicle.type = formVehicle.type;
       this.selectedVehicle.fuel = formVehicle.fuel;
@@ -124,8 +124,11 @@ export class VehiclesComponent implements OnInit {
       this.selectedVehicle.odometer = formVehicle.odometer;
 
       console.log(this.selectedVehicle);
-      let nestedSyncMagic = new Promise<void>((resolve, reject) => {
-        this.vehiclesProxyService.saveVehicle(this.selectedVehicle).subscribe(data => { console.log(data) });
+      let nestedSyncMagic = new Promise<void>((resolve) => {
+        this.vehiclesProxyService.saveVehicle(this.selectedVehicle).subscribe(data => {
+          console.log(data);
+          resolve();
+        });
       })
 
       nestedSyncMagic.then(() => {

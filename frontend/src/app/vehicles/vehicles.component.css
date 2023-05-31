@@ -21,3 +21,7 @@ button {
   width: 100px;
   text-align: right;
 }
+
+mat-header-cell {
+  text-align: center;
+}

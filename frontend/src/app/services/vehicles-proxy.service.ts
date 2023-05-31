@@ -28,7 +28,6 @@ export class VehiclesProxyService {
 
   saveVehicle(vehicle: VehicleDTO): Observable<VehicleDTO> {
     const url = `${this.apiUrl}/savevehicle`;
-    console.log(vehicle)
     return this.http.post<VehicleDTO>(url, vehicle);
   }
 }

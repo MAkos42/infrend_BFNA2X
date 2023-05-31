@@ -7,7 +7,7 @@ export class Driver {
     id: number
 
     @Column()
-    nev: string
+    name: string
 
     @Column("date")
     dateOfBirth: Date
@@ -21,8 +21,8 @@ export class Driver {
     @Column("date")
     idExpirationDate: Date
 
-    constructor(nev: string, dateOfBirth: Date, address: string, driversLicense: string, idExpirationDate: Date) {
-        this.nev = nev;
+    constructor(name: string, dateOfBirth: Date, address: string, driversLicense: string, idExpirationDate: Date) {
+        this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
         this.driversLicense = driversLicense;

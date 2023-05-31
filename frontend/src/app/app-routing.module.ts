@@ -9,6 +9,7 @@ const routes: Routes = [
   { path: "vehicles", component: VehiclesComponent },
   { path: "vehicles/:id", component: VehiclesComponent },
   { path: "drivers", component: DriversComponent },
+  { path: "drivers/:id", component: DriversComponent },
   { path: "trips", component: TripsComponent }
 ];
 

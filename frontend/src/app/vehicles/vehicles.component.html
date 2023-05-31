@@ -53,7 +53,7 @@
             Rendszám megadása kötelező
         </mat-error>
         <mat-error *ngIf="vehicleForm.controls['regPlate'].hasError('pattern')">
-            A rendszám formátuma az AAA(A)-000 mintának kell megfelelőnek lennie
+            A rendszám formátuma az AAA(A)-000 mintának megfelelőnek kell lennie
         </mat-error>
         <mat-error *ngIf="vehicleForm.controls['regPlate'].hasError('plateInUse')">
             A megadott rendszám már fel van véve a rendszerbe

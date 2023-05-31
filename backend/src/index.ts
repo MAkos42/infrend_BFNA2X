@@ -8,10 +8,14 @@ import { Trip } from "./entity/Trip";
 import { TripPurpose } from "./entity/TripPurpose";
 import { Login } from "./entity/Login";
 import { Vehicle } from "./entity/Vehicle";
-import { VehiclesService } from "./service/vehiclesService";
-
+import { VehiclesService } from "./service/VehiclesService";
+import { DriversService } from "./service/DriversService";
 
 const app = express();
+
+const dService = new DriversService();
+const vService = new VehiclesService();
+
 
 app.use(express.json());
 
@@ -22,9 +26,9 @@ let corsOptions = {
 
 app.use(cors(corsOptions));
 
+/* #region Vehicles */
 app.get('/api/vehicles', async (req, res) => {
     try {
-        const vService = new VehiclesService();
         const tableData = await vService.getVehicles();
         console.log('Returned entries:' + tableData.length);
         res.json(tableData);
@@ -37,7 +41,6 @@ app.get('/api/vehicles', async (req, res) => {
 app.post('/api/getvehicle', async (req, res) => {
     try {
         const { id } = req.body;
-        const vService = new VehiclesService();
         const vehicle = await vService.getVehicle(id);
         console.log(vehicle);
         res.json(vehicle);
@@ -50,7 +53,6 @@ app.post('/api/getvehicle', async (req, res) => {
 app.post('/api/getvehiclebyreg', async (req, res) => {
     try {
         const { regPlate } = req.body;
-        const vService = new VehiclesService();
         const vehicle = await vService.getVehicleByRegPlate(regPlate);
         console.log(vehicle);
         res.json(vehicle);
@@ -62,7 +64,6 @@ app.post('/api/getvehiclebyreg', async (req, res) => {
 
 app.post('/api/savevehicle', async (req, res) => {
     try {
-        const vService = new VehiclesService();
         const { id, regPlate, type, fuel, fuelEcon, odometer } = req.body;
         const newVehicle: Vehicle = new Vehicle(regPlate, type, fuel, fuelEcon, odometer)
         newVehicle.id = id;
@@ -76,6 +77,61 @@ app.post('/api/savevehicle', async (req, res) => {
     }
 });
 
+/* #endregion */
+
+/* #region Drivers */
+app.get('/api/drivers', async (req, res) => {
+    try {
+        const tableData = await dService.getDrivers();
+        console.log('Returned entries:' + tableData.length);
+        res.json(tableData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+app.post('/api/getdriver', async (req, res) => {
+    try {
+        const { id } = req.body;
+        const driver = await dService.getDriver(id);
+        console.log(driver);
+        res.json(driver);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+app.post('/api/getdriverbylicense', async (req, res) => {
+    try {
+        const { driversLicense } = req.body;
+        console.log(driversLicense)
+        const driver = await dService.getDriverByLicense(driversLicense);
+        console.log(driver);
+        res.json(driver);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+app.post('/api/savedriver', async (req, res) => {
+    try {
+        const { id, name, dateOfBirth, address, driversLicense, idExpirationDate } = req.body;
+        const newDriver: Driver = new Driver(name, new Date(Date.parse(dateOfBirth)), address, driversLicense, new Date(Date.parse(idExpirationDate)));
+        newDriver.id = id;
+        console.log(newDriver);
+        await dService.saveDriver(newDriver);
+
+        res.json(newDriver);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+/* #endregion */
+
 app.listen(3000, () => {
     console.log('Server is listening at port 3000 ...');
 });
@@ -85,6 +141,8 @@ AppDataSource.initialize().then(async () => {
     newAdmin.id = 1;
     let newDriver: Driver = new Driver("Mészáros Ákos", new Date(2000, 9, 25), "valaholaföldön", "AB123456", new Date(2024, 1, 1));
     newDriver.id = 1;
+    let newDriver2: Driver = new Driver("Balogh Gábor", new Date(1993, 11, 20), "Székesfehérvár", "XY123123", new Date(2023, 1, 1));
+    newDriver2.id = 2;
     let newVehicle: Vehicle = new Vehicle("ABCD-111", "Honda Civic", Fuel.DIESEL, 6.2, 10000);
     newVehicle.id = 1;
     let newTrip: Trip = new Trip(newDriver, newVehicle, new Date(), TripPurpose.BUSINESS, "Miskolc", "Budapest", 182)
@@ -93,6 +151,7 @@ AppDataSource.initialize().then(async () => {
 
     await AppDataSource.manager.save(newAdmin);
     await AppDataSource.manager.save(newDriver);
+    await AppDataSource.manager.save(newDriver2);
     await AppDataSource.manager.save(newVehicle);
     await AppDataSource.manager.save(newTrip);
 
