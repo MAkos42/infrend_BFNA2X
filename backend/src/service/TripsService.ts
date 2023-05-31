@@ -4,6 +4,9 @@ import { Trip } from "../entity/Trip";
 import { DriversService } from "./DriversService";
 import { VehiclesService } from "./VehiclesService";
 import { Vehicle } from "../entity/Vehicle";
+import { ReportRequest } from "../DTO/ReportRequest";
+import { Between } from "typeorm";
+import { Report } from "../entity/Report";
 
 export class TripsService {
     driverService: DriversService = new DriversService();
@@ -11,6 +14,15 @@ export class TripsService {
 
     getTrips(): Promise<Trip[]> {
         return AppDataSource.manager.find(Trip);
+    }
+
+    getReport(request: ReportRequest): Promise<void | Report> {
+        return this.vehiclesService.getVehicle(request.vehicleId).then(vehicle => {
+
+            return AppDataSource.manager.find(Trip, { where: { vehicle: vehicle, date: Between(request.startDate, request.endDate) } }).then(trips => {
+                return new Report(vehicle, trips);
+            })
+        });
     }
 
     saveTrip(newTrip: TripDTO): Promise<void | Trip[]> {

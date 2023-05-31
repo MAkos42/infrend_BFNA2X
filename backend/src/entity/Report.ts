@@ -1,13 +1,13 @@
-import { TripDTO } from "./TripDTO";
-import { VehicleDTO } from "./VehicleDTO";
+import { Trip } from "./Trip";
+import { Vehicle } from "./Vehicle";
 
-export class VehicleStat {
+export class Report {
     distance: number = 0;
     fuelConsumption: number;
     flatRate: number;
     sum: number;
 
-    constructor(vehicle: VehicleDTO, trips: TripDTO[]) {
+    constructor(vehicle: Vehicle, trips: Trip[]) {
         trips.forEach(trip => this.distance += trip.distance)
 
         this.fuelConsumption = Math.round(this.distance * vehicle.fuelEcon / 100);

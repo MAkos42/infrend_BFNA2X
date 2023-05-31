@@ -12,6 +12,7 @@ import { VehiclesService } from "./service/VehiclesService";
 import { DriversService } from "./service/DriversService";
 import { TripsService } from './service/TripsService';
 import { TripDTO } from "./DTO/TripDTO";
+import { ReportRequest } from "./DTO/ReportRequest";
 
 const app = express();
 
@@ -29,7 +30,7 @@ let corsOptions = {
 
 app.use(cors(corsOptions));
 
-/* #region Vehicles */
+//#region Vehicles
 app.get('/api/vehicles', async (req, res) => {
     try {
         const tableData = await vService.getVehicles();
@@ -80,9 +81,9 @@ app.post('/api/savevehicle', async (req, res) => {
     }
 });
 
-/* #endregion */
+//#endregion
 
-/* #region Drivers */
+//#region Drivers
 app.get('/api/drivers', async (req, res) => {
     try {
         const tableData = await dService.getDrivers();
@@ -133,8 +134,9 @@ app.post('/api/savedriver', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
-/* #endregion */
+//#endregion
 
+//#region Trips
 app.get('/api/trips', async (req, res) => {
     try {
         const trips = await tService.getTrips();
@@ -145,6 +147,20 @@ app.get('/api/trips', async (req, res) => {
             tableData.push(new TripDTO(trip));
         })
         res.json(tableData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+app.post('/api/report', async (req, res) => {
+    try {
+        const { vehicle, startDate, endDate } = req.body;
+        const request = new ReportRequest(vehicle, startDate, endDate);
+        const report = await tService.getReport(request);
+
+        console.log(report);
+        res.json(report);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
@@ -166,6 +182,7 @@ app.post('/api/savetrip', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+//#endregion
 
 app.listen(3000, () => {
     console.log('Server is listening at port 3000 ...');
