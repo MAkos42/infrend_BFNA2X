@@ -72,8 +72,8 @@
     <mat-form-field>
         <mat-label>Üzemanyag</mat-label>
         <mat-select formControlName="fuel">
-            <mat-option value="DIESEL">DIESEL</mat-option>
-            <mat-option value="GASOLINE">GASOLINE</mat-option>
+            <mat-option value="DIESEL">Diesel</mat-option>
+            <mat-option value="GASOLINE">Gasoline</mat-option>
         </mat-select>
         <mat-error *ngIf="vehicleForm.controls['fuel'].hasError('required') && vehicleForm.controls['fuel'].touched">
             Üzemanyag típus megadása kötelező

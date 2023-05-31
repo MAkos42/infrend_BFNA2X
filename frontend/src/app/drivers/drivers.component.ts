@@ -26,9 +26,9 @@ export class DriversComponent implements OnInit {
   driverForm = new FormGroup({
     name: new FormControl(null, [Validators.required, Validators.pattern('^[A-z]{2}[\\d]{7}$')]),
     dateOfBirth: new FormControl<Date>(null, Validators.required),
-    address: new FormControl(null, Validators.required),
+    address: new FormControl(null, [Validators.required, Validators.maxLength(255)]),
     driversLicense: new FormControl(null, [Validators.required, Validators.maxLength(255)]),
-    idExpirationDate: new FormControl<Date>(null, [Validators.required, Validators.min(0)])
+    idExpirationDate: new FormControl<Date>(null, Validators.required)
   });
 
   constructor(private driversProxyService: DriversProxyService, private router: Router, private route: ActivatedRoute, private snackBar: MatSnackBar) {

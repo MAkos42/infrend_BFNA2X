@@ -10,11 +10,14 @@ import { Login } from "./entity/Login";
 import { Vehicle } from "./entity/Vehicle";
 import { VehiclesService } from "./service/VehiclesService";
 import { DriversService } from "./service/DriversService";
+import { TripsService } from './service/TripsService';
+import { TripDTO } from "./DTO/TripDTO";
 
 const app = express();
 
 const dService = new DriversService();
 const vService = new VehiclesService();
+const tService = new TripsService();
 
 
 app.use(express.json());
@@ -131,6 +134,38 @@ app.post('/api/savedriver', async (req, res) => {
     }
 });
 /* #endregion */
+
+app.get('/api/trips', async (req, res) => {
+    try {
+        const trips = await tService.getTrips();
+        const tableData: TripDTO[] = [];
+        trips.forEach(trip => {
+            console.log(trip)
+            console.log(new TripDTO(trip))
+            tableData.push(new TripDTO(trip));
+        })
+        res.json(tableData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+app.post('/api/savetrip', async (req, res) => {
+    try {
+        const { driver, vehicle, date, purpose, startLocation, endLocation, distance, isReturnTrip } = req.body;
+        console.log('(@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+        console.log(req.body);
+        const newTrip: TripDTO = new TripDTO(undefined, driver, vehicle, new Date(Date.parse(date)), purpose, startLocation, endLocation, distance, isReturnTrip);
+        console.log(newTrip);
+        await tService.saveTrip(newTrip);
+
+        res.json(newTrip);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
 app.listen(3000, () => {
     console.log('Server is listening at port 3000 ...');

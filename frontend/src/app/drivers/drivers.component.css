@@ -1,4 +1,5 @@
 mat-form-field {
+  width: 250px;
   padding-bottom: 18px;
 }
 
@@ -31,5 +32,5 @@ mat-header-cell {
 }
 
 .address {
-  width: 460px;
+  width: 500px;
 }

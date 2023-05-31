@@ -9,11 +9,11 @@ export class Trip {
     @PrimaryGeneratedColumn({ name: "tripid" })
     id: number
 
-    @ManyToOne(() => Driver)
+    @ManyToOne(() => Driver, { eager: true })
     @JoinColumn()
     driver: Driver
 
-    @ManyToOne(() => Vehicle)
+    @ManyToOne(() => Vehicle, { eager: true })
     @JoinColumn()
     vehicle: Vehicle
 
@@ -32,9 +32,6 @@ export class Trip {
     @Column()
     distance: number
 
-    @Column()
-    newOdometer: number
-
     constructor(driver: Driver, vehicle: Vehicle, date: Date, purpose: TripPurpose, startLocation: string, endLocation: string, distance: number) {
         this.driver = driver
         this.vehicle = vehicle
@@ -43,7 +40,6 @@ export class Trip {
         this.startLocation = startLocation
         this.endLocation = endLocation
         this.distance = distance
-        this.newOdometer = 0
     }
 
 }
